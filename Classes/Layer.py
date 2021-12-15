@@ -67,14 +67,11 @@ class Layer:
 
     def setOutputDeltas(self, targets: Matrice) -> None:
         errors = self.__output - targets
-        self.__deltas = errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx)) * 0.5
+        self.__deltas = .5 * errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
     def tuning(self) -> None:
-        # print('deltaBiases :\n', self.__deltas * self.__learningRate * self.__momentumRate - self.__previousDeltaBiases * (1 - self.__momentumRate), end='\n\n')
-        # print('deltaWeights :\n', self.__dCost_dWeights * self.__learningRate * self.__momentumRate - self.__previousDeltaWeights * (1 - self.__momentumRate), end='\n\n')
-
-        self.__biases -= self.__deltas * self.__learningRate * self.__momentumRate - self.__previousDeltaBiases * (1 - self.__momentumRate)
-        self.__weights -= self.__dCost_dWeights * self.__learningRate * self.__momentumRate - self.__previousDeltaWeights * (1 - self.__momentumRate)
+        self.__biases -= self.__learningRate * self.__momentumRate * self.__deltas - (1 - self.__momentumRate) * self.__previousDeltaBiases
+        self.__weights -= self.__learningRate * self.__momentumRate * self.__dCost_dWeights - (1 - self.__momentumRate) * self.__previousDeltaWeights
 
         self.__previousDeltaBiases = self.__deltas
         self.__previousDeltaWeights = self.__dCost_dWeights
