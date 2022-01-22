@@ -25,7 +25,6 @@ class Layer:
         self.__previousDeltaBiases: Matrice = Matrice.vide(self.__shape[self.__column], 1)
         self.__previousDeltaWeights: Matrice = Matrice.vide(self.__shape[self.__column], self.__shape[self.__column - 1])
 
-
     def __d_sigmoid_dx(self, y: float) -> float:
         return N(self.__sigmoid(y) * (1 - self.__sigmoid(y)))
 
