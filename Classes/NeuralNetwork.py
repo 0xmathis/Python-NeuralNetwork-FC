@@ -13,23 +13,23 @@ from Utile import date_in, from_secondes
 
 class NeuralNetwork:
     def __init__(self, shape: tuple[int, ...], learningRate: float, momentumRate: float, biasesPath: str = 'Database\\biases.txt', weightsPath: str = 'Database\\weights.txt'):
-        self.__shape: tuple[int, ...] = shape
         self.__learningRate: float = learningRate
         self.__momentumRate: float = momentumRate
 
-        self.__database: DataBase = DataBase(self.__shape, biasesPath=biasesPath, weightsPath=weightsPath)
+        self.__database: DataBase = DataBase(shape, biasesPath=biasesPath, weightsPath=weightsPath)
 
         self.__dataSet: list[Matrice] = []
         self.__targetsSet: list[Matrice] = []
 
-        self.__layers = []
-        for i in range(1, len(self.__shape)):
+        self.__layers: list[Layer] = []
+        for i in range(1, len(shape)):
             if self.__database.isBiasesFileFull() and self.__database.isWeightsFileFull():
-                self.__layers += [Layer(self.__shape, i, self.__learningRate, self.__momentumRate, biases=self.__database.getBiases(i - 1), weights=self.__database.getWeights(i - 1))]
+                self.__layers += [Layer(shape, i, self.__learningRate, self.__momentumRate, biases=self.__database.getBiases(i - 1), weights=self.__database.getWeights(i - 1))]
             else:
-                self.__layers += [Layer(self.__shape, i, self.__learningRate, self.__momentumRate)]
+                self.__layers += [Layer(shape, i, self.__learningRate, self.__momentumRate)]
 
-        self.toFile()
+        if not (self.__database.isBiasesFileFull() and self.__database.isWeightsFileFull()):
+            self.__toFile()
 
     def __backPropagation(self, inputs: Matrice, targets: Matrice) -> None:
         # calcul des deltas
@@ -52,7 +52,7 @@ class NeuralNetwork:
         choix = randint(0, len(self.__dataSet) - 1)
         data = self.__dataSet[choix]
         target = self.__targetsSet[choix]
-        self.feedForward(data)
+        self.__feedForward(data)
         self.__backPropagation(data, target)
         time_ff_dp = time() - temp2
 
@@ -60,21 +60,22 @@ class NeuralNetwork:
 
         return f'Temps total évalué : {from_secondes(time_total)}\nFin évalué : {date_in(time_total)}'
 
-    def feedForward(self, data: Matrice) -> Matrice:
+    def __feedForward(self, data: Matrice) -> Matrice:
         for layer in self.__layers:
             data = layer.feedForward(data)
 
         return data
 
-    def toFile(self) -> None:
+    def __toFile(self) -> None:
         biasesList = [layer.getBiases() for layer in self.__layers]
         weightsList = [layer.getWeights() for layer in self.__layers]
 
         self.__database.toFile(biasesList=biasesList, weightsList=weightsList)
 
-    def guess(self, data: Sequence) -> tuple[Any]:
+    def guess(self, data: list) -> tuple[Any]:
         data_ = Matrice([data]).T
-        guess = self.feedForward(data_)
+        print(data_)
+        guess = self.__feedForward(data_)
         guess_ = guess.T.toList()[0]
 
         return tuple(N(x, 10) for x in guess_)
@@ -103,11 +104,11 @@ class NeuralNetwork:
             data: Matrice = self.__dataSet[choix]
             target: Matrice = self.__targetsSet[choix]
 
-            self.feedForward(data)
+            self.__feedForward(data)
             self.__backPropagation(data, target)
 
             if i % freq == 0:
-                self.toFile()
+                self.__toFile()
 
             temp2 = time() - temp
 
@@ -146,7 +147,7 @@ class NeuralNetwork:
             data: Matrice = self.__dataSet[choix]
             target: Matrice = self.__targetsSet[choix]
 
-            self.feedForward(data)
+            self.__feedForward(data)
             self.__backPropagation(data, target)
 
             cost = abs(self.getLayers()[-1].getOutputCosts(target))
@@ -164,7 +165,7 @@ class NeuralNetwork:
         total = time() - start
         print('Temps total :', from_secondes(total), '\n')
 
-        self.toFile()
+        self.__toFile()
 
         if graph:
             subplot(2, 1, 1)
@@ -178,10 +179,10 @@ class NeuralNetwork:
     def trainFromExternalData(self, dataMatrice: Matrice, targetMatrice: Matrice, iteration: int, freq: int):
         start = time()
 
-        self.feedForward(dataMatrice)
+        self.__feedForward(dataMatrice)
         self.__backPropagation(dataMatrice, targetMatrice)
 
         if iteration % freq == 0:
-            self.toFile()
+            self.__toFile()
 
         print(f'{iteration} :', from_secondes(time() - start))

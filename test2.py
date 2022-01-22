@@ -1,2 +1,3 @@
-with open('b.txt', 'w') as f:
-    pass
+from numpy import *
+
+print(zeros((5, 2), int))
