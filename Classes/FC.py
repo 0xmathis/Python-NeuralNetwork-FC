@@ -11,7 +11,7 @@ from Matrice import Matrice
 from Utile import date_in, from_secondes
 
 
-class NeuralNetwork:
+class FC:
     def __init__(self, shape: tuple[int, ...], learningRate: float, momentumRate: float, biasesPath: str = 'Database\\biases.txt', weightsPath: str = 'Database\\weights.txt'):
         self.__learningRate: float = learningRate
         self.__momentumRate: float = momentumRate
