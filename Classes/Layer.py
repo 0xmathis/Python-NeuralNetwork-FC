@@ -73,5 +73,5 @@ class Layer:
         self.__biases -= self.__learningRate * self.__momentumRate * self.__deltas - (1 - self.__momentumRate) * self.__previousDeltaBiases
         self.__weights -= self.__learningRate * self.__momentumRate * self.__dCost_dWeights - (1 - self.__momentumRate) * self.__previousDeltaWeights
 
-        self.__previousDeltaBiases = self.__deltas
-        self.__previousDeltaWeights = self.__dCost_dWeights
+        self.__previousDeltaBiases = self.__deltas.copy()
+        self.__previousDeltaWeights = self.__dCost_dWeights.copy()
