@@ -122,13 +122,8 @@ class FC:
         print('Temps total :', from_secondes(total), '\n')
 
         if graph:
-            subplot(2, 1, 1)
-            ylabel('Norme du cout')
-            plot([i for i in range(1, nbIterations + 1)], yErrorPlot, linewidth=0.2)
-            subplot(2, 1, 2)
-            ylabel('Durée de chaque itération (ms)')
-            plot([i for i in range(1, nbIterations + 1)], yTimePlot)
-            show()
+            self.showGraph(nbIterations, yErrorPlot, yTimePlot)
+
 
     def trainFromDataInObjectWhileCostAboveMax(self, maxCost: float, graph: bool) -> None:
         # iteration est le nombre d'entrainements à faire
@@ -168,13 +163,17 @@ class FC:
         self.__toFile()
 
         if graph:
-            subplot(2, 1, 1)
-            ylabel('Norme du cout')
-            plot([i for i in range(1, nbIterations)], yErrorPlot, linewidth=0.2)
-            subplot(2, 1, 2)
-            ylabel('Durée de chaque itération (ms)')
-            plot([i for i in range(1, nbIterations)], yTimePlot)
-            show()
+            self.showGraph(nbIterations, yErrorPlot, yTimePlot)
+
+    @staticmethod
+    def showGraph(nbIterations, yErrorPlot, yTimePlot):
+        subplot(2, 1, 1)
+        ylabel('Norme du cout')
+        plot(list(range(1, nbIterations)), yErrorPlot, linewidth=0.2)
+        subplot(2, 1, 2)
+        ylabel('Durée de chaque itération (ms)')
+        plot(list(range(1, nbIterations)), yTimePlot)
+        show()
 
     def trainFromExternalData(self, dataMatrice: Matrice, targetMatrice: Matrice, iteration: int, freq: int):
         start = time()
