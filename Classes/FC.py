@@ -5,8 +5,8 @@ from typing import Any, Sequence
 from matplotlib.pyplot import plot, show, subplot, ylabel
 from sympy import N
 
-from DataBase import DataBase
-from Layer import Layer
+from Classes.DataBase import DataBase
+from Classes.Layer import Layer
 from Matrice import Matrice
 from Utile import date_in, from_secondes
 
