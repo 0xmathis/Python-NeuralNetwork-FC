@@ -1,8 +1,8 @@
-from Classes.NeuralNetwork import NeuralNetwork
+from Classes.FC import FC
 
 inputs = [[0, 0], [1, 1], [0, 1], [1, 0]]
 targets = [[1], [1], [0], [0]]
-nn = NeuralNetwork((2, 2, 1), .5, .9)
+nn = FC((2, 2, 1), .5, .9)
 nn.setDataSet(inputs)
 nn.setTargetsSet(targets)
 
