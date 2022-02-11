@@ -67,7 +67,7 @@ class Layer:
 
     def setOutputDeltas(self, targets: Matrice) -> None:
         errors = self.__output - targets
-        self.__deltas = .5 * errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
+        self.__deltas = errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
     def tuning(self) -> None:
         self.__biases -= self.__learningRate * self.__momentumRate * self.__deltas - (1 - self.__momentumRate) * self.__previousDeltaBiases
