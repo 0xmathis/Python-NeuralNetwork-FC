@@ -124,7 +124,6 @@ class FC:
         if graph:
             self.showGraph(nbIterations, yErrorPlot, yTimePlot)
 
-
     def trainFromDataInObjectWhileCostAboveMax(self, maxCost: float, graph: bool) -> None:
         # iteration est le nombre d'entrainements à faire
         # freq est la frequence à laquelle sauvegarder la base de données
