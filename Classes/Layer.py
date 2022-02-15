@@ -18,8 +18,8 @@ class Layer:
             self.__weights = weights
 
         self.__input: Matrice = Matrice.vide(self.__shape[self.__column - 1], 1)
-        self.__weightedSum: Matrice = Matrice.vide(self.__shape[self.__column - 1], 1)
         self.__output: Matrice = Matrice.vide(self.__shape[self.__column], 1)
+        self.__weightedSum: Matrice = Matrice.vide(self.__shape[self.__column - 1], 1)
         self.__deltas: Matrice = Matrice.vide(self.__shape[self.__column], 1)
         self.__dCost_dWeights: Matrice = Matrice.vide(self.__shape[self.__column], self.__shape[self.__column - 1])
         self.__previousDeltaBiases: Matrice = Matrice.vide(self.__shape[self.__column], 1)
