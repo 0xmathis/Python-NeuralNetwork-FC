@@ -19,6 +19,7 @@ class Layer:
 
         self.__input: Matrice = Matrice.vide(self.__shape[self.__column - 1], 1)
         self.__output: Matrice = Matrice.vide(self.__shape[self.__column], 1)
+        self.__errors: Matrice = Matrice.vide(self.__shape[self.__column], 1)
         self.__weightedSum: Matrice = Matrice.vide(self.__shape[self.__column - 1], 1)
         self.__deltas: Matrice = Matrice.vide(self.__shape[self.__column], 1)
         self.__dCost_dWeights: Matrice = Matrice.vide(self.__shape[self.__column], self.__shape[self.__column - 1])
@@ -53,10 +54,8 @@ class Layer:
     def getOutput(self) -> Matrice:
         return self.__output
 
-    def getOutputCosts(self, targets: Matrice) -> Matrice:
-        errors = self.__output - targets
-
-        return errors.hp(errors) * 0.5
+    def getOutputCosts(self) -> Matrice:
+        return self.__errors.hp(self.__errors) * 0.5
 
     def getWeightedSum(self) -> Matrice:
         return self.__weightedSum
@@ -70,9 +69,12 @@ class Layer:
     def setDeltas(self, nextLayerWeights: Matrice, nextLayerDeltas: Matrice) -> None:
         self.__deltas = (nextLayerWeights.T * nextLayerDeltas).hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
+    def setErrors(self, targets: Matrice):
+        self.__errors = self.__output - targets
+
     def setOutputDeltas(self, targets: Matrice) -> None:
-        errors = self.__output - targets
-        self.__deltas = errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
+        self.setErrors(targets)
+        self.__deltas = self.__errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
     def tuning(self) -> None:
         self.__biases -= self.__learningRate * self.__momentumRate * self.__deltas - (1 - self.__momentumRate) * self.__previousDeltaBiases
