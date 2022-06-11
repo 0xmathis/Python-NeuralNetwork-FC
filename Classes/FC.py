@@ -197,16 +197,6 @@ class FC:
         if graph:
             self.showGraph(nbIterations, yErrorPlot, yTimePlot)
 
-    @staticmethod
-    def showGraph(nbIterations, yErrorPlot, yTimePlot):
-        subplot(2, 1, 1)
-        ylabel('Norme du cout')
-        plot(list(range(1, nbIterations)), yErrorPlot, linewidth=0.2)
-        subplot(2, 1, 2)
-        ylabel('Durée de chaque itération (ms)')
-        plot(list(range(1, nbIterations)), yTimePlot)
-        show()
-
     def trainFromExternalData(self, dataMatrice: Matrice, targetMatrice: Matrice, iteration: int, freq: int):
         start = time()
 
@@ -217,3 +207,13 @@ class FC:
             self.__toFile()
 
         print(f'{iteration} :', self.__from_secondes(time() - start))
+
+    @staticmethod
+    def showGraph(nbIterations, yErrorPlot, yTimePlot):
+        subplot(2, 1, 1)
+        ylabel('Norme du cout')
+        plot(list(range(1, nbIterations)), yErrorPlot, linewidth=0.2)
+        subplot(2, 1, 2)
+        ylabel('Durée de chaque itération (ms)')
+        plot(list(range(1, nbIterations)), yTimePlot)
+        show()

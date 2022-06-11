@@ -69,11 +69,11 @@ class Layer:
     def setDeltas(self, nextLayerWeights: Matrice, nextLayerDeltas: Matrice) -> None:
         self.__deltas = (nextLayerWeights.T * nextLayerDeltas).hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
-    def setErrors(self, targets: Matrice):
+    def __setErrors(self, targets: Matrice):
         self.__errors = self.__output - targets
 
     def setOutputDeltas(self, targets: Matrice) -> None:
-        self.setErrors(targets)
+        self.__setErrors(targets)
         self.__deltas = self.__errors.hp(self.__weightedSum.map(self.__d_sigmoid_dx))
 
     def tuning(self) -> None:
