@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../_PersoMatrices/.idea/_PersoMatrices.iml" filepath="$PROJECT_DIR$/../_PersoMatrices/.idea/_PersoMatrices.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/_PersoNeuralNetwork-FC.iml" filepath="$PROJECT_DIR$/.idea/_PersoNeuralNetwork-FC.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../_PersoUtile/.idea/_PersoUtile.iml" filepath="$PROJECT_DIR$/../_PersoUtile/.idea/_PersoUtile.iml" />
     </modules>
   </component>
 </project>

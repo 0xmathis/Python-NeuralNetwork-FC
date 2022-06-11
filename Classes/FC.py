@@ -8,7 +8,7 @@ from sympy import N
 from Classes.DataBase import DataBase
 from Classes.Layer import Layer
 from Matrice import Matrice
-from Utile import date_in, from_secondes
+from time import localtime
 
 
 class FC:
@@ -47,6 +47,40 @@ class FC:
         for i in range(len(self.__layers)):
             self.__layers[i].tuning()
 
+    @staticmethod
+    def __date_in(sec: float) -> str:
+        dico_days = {
+            0: 'lun', 1: 'mar',
+            2: 'mer', 3: 'jeu',
+            4: 'ven', 5: 'sam',
+            6: 'dim'
+            }
+        dico_months = {
+            1: 'janvier', 2: 'fevrier',
+            3: 'mars', 4: 'avril',
+            5: 'mai', 6: 'juin',
+            7: 'juillet', 8: 'aout',
+            9: 'septembre', 10: 'octobre',
+            11: 'novembre', 12: 'decembre',
+            }
+
+        final = localtime(time() + sec)
+
+        return f'{dico_days[final.tm_wday]} {final.tm_mday} {dico_months[final.tm_mon]} {final.tm_hour}:{final.tm_min}:{final.tm_sec}'
+
+    @staticmethod
+    def __from_secondes(sec: float) -> str:
+        final = ''
+        for i, txt in ((2, 'h'), (1, 'm'), (0, 's')):
+            val = int((sec % (60 ** (i + 1))) // (60 ** i))
+            if val != 0:
+                final += str(val) + txt
+        milli = round((sec % 1) * 1000)
+        if milli != 0:
+            final += f'{milli}ms'
+
+        return final or '0s'
+
     def __evaluate_time(self, iterations: int) -> str:
         temp2 = time()
         choix = randint(0, len(self.__dataSet) - 1)
@@ -58,7 +92,7 @@ class FC:
 
         time_total = time_ff_dp * iterations
 
-        return f'Temps total évalué : {from_secondes(time_total)}\nFin évalué : {date_in(time_total)}'
+        return f'Temps total évalué : {self.__from_secondes(time_total)}\nFin évalué : {self.__date_in(time_total)}'
 
     def __feedForward(self, data: Matrice) -> Matrice:
         for layer in self.__layers:
@@ -111,14 +145,14 @@ class FC:
 
             temp2 = time() - temp
 
-            print(f'{i} :', from_secondes(temp2))
+            print(f'{i} :', self.__from_secondes(temp2))
 
             if graph:
-                yErrorPlot.append(abs(self.getLayers()[-1].getOutputCosts(target)))
+                yErrorPlot.append(abs(self.getLayers()[-1].getOutputCosts()))
                 yTimePlot.append(temp2)
 
         total = time() - start
-        print('Temps total :', from_secondes(total), '\n')
+        print('Temps total :', self.__from_secondes(total), '\n')
 
         if graph:
             self.showGraph(nbIterations, yErrorPlot, yTimePlot)
@@ -143,11 +177,11 @@ class FC:
             self.__feedForward(data)
             self.__backPropagation(data, target)
 
-            cost = abs(self.getLayers()[-1].getOutputCosts(target))
+            cost = abs(self.getLayers()[-1].getOutputCosts())
 
             temp2 = time() - temp
 
-            print(f'{nbIterations} : {from_secondes(temp2)} ; Cost : {N(cost, 8)}')
+            print(f'{nbIterations} : {self.__from_secondes(temp2)} ; Cost : {N(cost, 8)}')
 
             if graph:
                 yErrorPlot.append(cost)
@@ -156,7 +190,7 @@ class FC:
             nbIterations += 1
 
         total = time() - start
-        print('Temps total :', from_secondes(total), '\n')
+        print('Temps total :', self.__from_secondes(total), '\n')
 
         self.__toFile()
 
@@ -182,4 +216,4 @@ class FC:
         if iteration % freq == 0:
             self.__toFile()
 
-        print(f'{iteration} :', from_secondes(time() - start))
+        print(f'{iteration} :', self.__from_secondes(time() - start))
