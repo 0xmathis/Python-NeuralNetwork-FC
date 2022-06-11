@@ -74,7 +74,6 @@ class FC:
 
     def guess(self, data: list) -> tuple[Any]:
         data_ = Matrice([data]).T
-        print(data_)
         guess = self.__feedForward(data_)
         guess_ = guess.T.toList()[0]
 
